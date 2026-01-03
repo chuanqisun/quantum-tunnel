@@ -39,45 +39,71 @@ var children = [];
 // wants to activate it.
 if (hasGetUserMedia()) {
   enableWebcamButton = document.getElementById("webcamButton");
-  enableWebcamButton.addEventListener("click", enableCam);
+  enableWebcamButton.addEventListener("click", toggleCam);
 } else {
   console.warn("getUserMedia() is not supported by your browser");
 }
 
+let webcamRunning = false;
+
 // Enable the live webcam view and start detection.
-async function enableCam(event) {
+async function toggleCam(event) {
   if (!faceDetector) {
     alert("Face Detector is still loading. Please try again..");
     return;
   }
 
-  // Hide the button.
-  enableWebcamButton.classList.add("removed");
+  if (webcamRunning === true) {
+    webcamRunning = false;
+    enableWebcamButton.innerText = "START";
 
-  // getUsermedia parameters
-  const constraints = {
-    video: true,
-  };
-
-  // Activate the webcam stream.
-  navigator.mediaDevices
-    .getUserMedia(constraints)
-    .then(async function (stream) {
-      // Set to VIDEO mode since we only use webcam now
-      if (runningMode === "IMAGE") {
-        runningMode = "VIDEO";
-        await faceDetector.setOptions({ runningMode: "VIDEO" });
-      }
-      video.srcObject = stream;
-      video.addEventListener("loadeddata", predictWebcam);
-    })
-    .catch((err) => {
-      console.error(err);
+    // Stop the webcam stream
+    const stream = video.srcObject;
+    const tracks = stream.getTracks();
+    tracks.forEach((track) => {
+      track.stop();
     });
+    video.srcObject = null;
+
+    // Clear detections
+    for (let child of children) {
+      liveView.removeChild(child);
+    }
+    children.splice(0);
+  } else {
+    webcamRunning = true;
+    enableWebcamButton.innerText = "STOP";
+
+    // getUsermedia parameters
+    const constraints = {
+      video: true,
+    };
+
+    // Activate the webcam stream.
+    navigator.mediaDevices
+      .getUserMedia(constraints)
+      .then(async function (stream) {
+        // Set to VIDEO mode since we only use webcam now
+        if (runningMode === "IMAGE") {
+          runningMode = "VIDEO";
+          await faceDetector.setOptions({ runningMode: "VIDEO" });
+        }
+        video.srcObject = stream;
+        video.addEventListener("loadeddata", predictWebcam);
+      })
+      .catch((err) => {
+        console.error(err);
+        webcamRunning = false;
+        enableWebcamButton.innerText = "START";
+      });
+  }
 }
 
 let lastVideoTime = -1;
 async function predictWebcam() {
+  if (!webcamRunning) {
+    return;
+  }
   let startTimeMs = performance.now();
 
   // Detect faces using detectForVideo
@@ -101,46 +127,17 @@ function displayVideoDetections(detections) {
 
   // Iterate through predictions and draw them to the live view
   for (let detection of detections) {
-    const p = document.createElement("p");
-    p.innerText = "Confidence: " + Math.round(parseFloat(detection.categories[0].score) * 100) + "% .";
-    p.style =
-      "left: " +
-      (video.offsetWidth - detection.boundingBox.width - detection.boundingBox.originX) +
-      "px;" +
-      "top: " +
-      (detection.boundingBox.originY - 30) +
-      "px; " +
-      "width: " +
-      (detection.boundingBox.width - 10) +
-      "px;";
+    // Calculate midpoint between eyes (keypoints 0 and 1)
+    if (detection.keypoints.length >= 2) {
+      const eye1 = detection.keypoints[0];
+      const eye2 = detection.keypoints[1];
+      const midX = (eye1.x + eye2.x) / 2;
+      const midY = (eye1.y + eye2.y) / 2;
 
-    const highlighter = document.createElement("div");
-    highlighter.setAttribute("class", "highlighter");
-    highlighter.style =
-      "left: " +
-      (video.offsetWidth - detection.boundingBox.width - detection.boundingBox.originX) +
-      "px;" +
-      "top: " +
-      detection.boundingBox.originY +
-      "px;" +
-      "width: " +
-      (detection.boundingBox.width - 10) +
-      "px;" +
-      "height: " +
-      detection.boundingBox.height +
-      "px;";
-
-    liveView.appendChild(highlighter);
-    liveView.appendChild(p);
-
-    // Store drawn objects in memory so they are queued to delete at next call
-    children.push(highlighter);
-    children.push(p);
-    for (let keypoint of detection.keypoints) {
-      const keypointEl = document.createElement("spam");
+      const keypointEl = document.createElement("span");
       keypointEl.className = "key-point";
-      keypointEl.style.top = `${keypoint.y * video.offsetHeight - 3}px`;
-      keypointEl.style.left = `${video.offsetWidth - keypoint.x * video.offsetWidth - 3}px`;
+      keypointEl.style.top = `${midY * video.offsetHeight - 3}px`;
+      keypointEl.style.left = `${video.offsetWidth - midX * video.offsetWidth - 3}px`;
       liveView.appendChild(keypointEl);
       children.push(keypointEl);
     }

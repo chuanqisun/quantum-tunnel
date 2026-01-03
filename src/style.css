@@ -15,46 +15,34 @@ limitations under the License. */
 @use "@material";
 body {
   font-family: roboto;
+  background-color: black;
+  margin: 0;
+  overflow: hidden;
+}
+
+#control-panel {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  color: white;
 }
 
 video {
-  clear: both;
+  width: 320px;
+  height: auto;
   display: block;
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
 }
 
-section {
-  opacity: 1;
-  transition: opacity 500ms ease-in-out;
-}
-
 .videoView {
   position: relative;
-  float: left;
-  width: 100%;
-  margin: 2% 1%;
-  cursor: pointer;
-}
-
-.videoView p {
-  position: absolute;
-  padding-bottom: 5px;
-  padding-top: 5px;
-  background-color: #007f8b;
-  color: #fff;
-  border: 1px dashed rgba(255, 255, 255, 0.7);
-  z-index: 2;
-  font-size: 12px;
-  margin: 0;
-}
-
-.highlighter {
-  background: rgba(0, 255, 0, 0.25);
-  border: 1px dashed #fff;
-  z-index: 1;
-  position: absolute;
+  width: 320px;
 }
 
 .key-point {
