@@ -2,7 +2,7 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/parallax-hud/",
+  base: "/quantum-tunnel/",
   build: {
     rollupOptions: {
       input: {
