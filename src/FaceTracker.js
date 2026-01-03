@@ -8,6 +8,9 @@ export class FaceTracker extends EventTarget {
     this.running = false;
     this.lastVideoTime = -1;
     this.requestRef = null;
+    this.restingPoint = { x: 0, y: 0 };
+    this.isCalibrating = false;
+    this.calibrationData = [];
   }
 
   async #initialize() {
@@ -44,6 +47,25 @@ export class FaceTracker extends EventTarget {
     this.dispatchEvent(new CustomEvent("stopped"));
   }
 
+  calibrate() {
+    if (!this.running) return;
+    this.isCalibrating = true;
+    this.calibrationData = [];
+
+    setTimeout(() => {
+      this.isCalibrating = false;
+      if (this.calibrationData.length > 0) {
+        const sumX = this.calibrationData.reduce((acc, p) => acc + p.x, 0);
+        const sumY = this.calibrationData.reduce((acc, p) => acc + p.y, 0);
+        this.restingPoint = {
+          x: sumX / this.calibrationData.length,
+          y: sumY / this.calibrationData.length,
+        };
+      }
+      this.dispatchEvent(new CustomEvent("calibrated", { detail: this.restingPoint }));
+    }, 1000);
+  }
+
   #predict() {
     if (!this.running) return;
 
@@ -62,8 +84,15 @@ export class FaceTracker extends EventTarget {
 
           // Convert to [-1, 1]
           // Mirrored X: (1 - midX) * 2 - 1
-          const x = (1 - midX) * 2 - 1;
-          const y = midY * 2 - 1;
+          const rawX = (1 - midX) * 2 - 1;
+          const rawY = midY * 2 - 1;
+
+          if (this.isCalibrating) {
+            this.calibrationData.push({ x: rawX, y: rawY });
+          }
+
+          const x = rawX - this.restingPoint.x;
+          const y = rawY - this.restingPoint.y;
 
           this.dispatchEvent(
             new CustomEvent("updated", {

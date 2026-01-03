@@ -7,6 +7,7 @@ const video = document.getElementById("webcam");
 const liveView = document.getElementById("liveView");
 const startButton = document.getElementById("startButton");
 const stopButton = document.getElementById("stopButton");
+const calibrateButton = document.getElementById("calibrateButton");
 
 if (!navigator.mediaDevices?.getUserMedia) {
   console.warn("getUserMedia() is not supported by your browser");
@@ -44,4 +45,15 @@ startButton.addEventListener("click", () => {
 
 stopButton.addEventListener("click", () => {
   webcamManager.stop();
+});
+
+calibrateButton.addEventListener("click", () => {
+  calibrateButton.disabled = true;
+  calibrateButton.textContent = "CALIBRATING...";
+  faceTracker.calibrate();
+});
+
+faceTracker.addEventListener("calibrated", () => {
+  calibrateButton.disabled = false;
+  calibrateButton.textContent = "CALIBRATE";
 });
