@@ -1,21 +1,7 @@
-/* Copyright 2023 The MediaPipe Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License. */
-
-@use "@material";
 body {
-  font-family: roboto;
+  font-family: monospace;
   background-color: black;
+  color-scheme: dark;
   margin: 0;
   overflow: hidden;
 }
@@ -27,12 +13,17 @@ body {
   transform: translate(-50%, -50%);
   padding: 20px 40px;
   font-size: 24px;
+  font-family: inherit;
   cursor: pointer;
   z-index: 1000;
-  background: white;
-  border: none;
+  background: transparent;
+  border: 1px solid currentColor;
   border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    background-color: CanvasText;
+    color: Canvas;
+  }
 }
 
 #startButton.hidden {
