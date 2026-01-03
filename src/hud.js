@@ -35,6 +35,7 @@ async function initEyeTracking() {
     webcamManager = new WebcamManager(video);
     faceTracker = new FaceTracker(video);
     liveViewManager = new LiveViewManager(liveView, video);
+    liveViewManager.setKeypointVisible(false);
 
     faceTracker.addEventListener("updated", (event) => {
       if (currentMode === "eye") {

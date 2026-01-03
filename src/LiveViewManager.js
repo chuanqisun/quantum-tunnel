@@ -4,6 +4,14 @@ export class LiveViewManager {
     this.video = videoElement;
     this.children = [];
     this.fpsEl = this.container.querySelector(".fps-counter");
+    this.showKeypoint = true;
+  }
+
+  setKeypointVisible(visible) {
+    this.showKeypoint = visible;
+    if (!visible) {
+      this.clear();
+    }
   }
 
   show() {
@@ -25,6 +33,8 @@ export class LiveViewManager {
 
   updateKeypoint(x, y) {
     this.clear();
+
+    if (!this.showKeypoint) return;
 
     const keypointEl = document.createElement("span");
     keypointEl.className = "key-point";
