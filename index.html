@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shanshui Parallax</title>
+  </head>
+  <body>
+    <h1>Face detection using the MediaPipe Face Detector task</h1>
+
+    <section id="demos" class="invisible">
+      <h2>Webcam Face Detection</h2>
+      <p>Detect faces from your webcam. When ready click "enable webcam" below and accept access to the webcam.</p>
+      <div id="liveView" class="videoView">
+        <button id="webcamButton" class="mdc-button mdc-button--raised">
+          <span class="mdc-button__ripple"></span>
+          <span class="mdc-button__label">ENABLE WEBCAM</span>
+        </button>
+        <video id="webcam" autoplay playsinline></video>
+      </div>
+    </section>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
