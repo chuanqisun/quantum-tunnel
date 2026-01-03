@@ -110,7 +110,7 @@
 
       new p5((p) => {
         let layers = [];
-        const LAYER_COUNT = 12;
+        const LAYER_COUNT = 16;
         const COLORS = ["#00f2ff", "#0066ff", "#ffffff", "#33bbff", "#7000ff", "#00ff88", "#ff006a", "#ffaa00"];
 
         const LABELS = ["SYNC", "LOCK", "TRK", "NAV", "SYS", "PWR", "DATA", "LINK", "SCAN", "PROC", "MEM", "CPU", "NET", "SEC", "AUTH", "INIT"];
@@ -197,14 +197,11 @@
           let my = (p.mouseY - p.height / 2) / (p.height / 2);
           let dist = p.constrain(p.sqrt(mx * mx + my * my), 0, 1);
 
-          let spreadX = mx * 70;
-          let spreadY = my * 70;
+          let maxDepth = LAYER_COUNT / 2 - 0.5;
+          let spreadX = (p.mouseX - p.width / 2) / maxDepth;
+          let spreadY = (p.mouseY - p.height / 2) / maxDepth;
 
-          let sortedLayers = [...layers].sort((a, b) => {
-            let aPerceived = a.depth * (mx + my);
-            let bPerceived = b.depth * (mx + my);
-            return aPerceived - bPerceived;
-          });
+          let sortedLayers = [...layers].sort((a, b) => a.depth - b.depth);
 
           sortedLayers.forEach((layer) => {
             p.push();
