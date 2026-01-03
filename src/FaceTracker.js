@@ -11,6 +11,8 @@ export class FaceTracker extends EventTarget {
     this.restingPoint = { x: 0, y: 0 };
     this.isCalibrating = false;
     this.calibrationData = [];
+    this.fps = 0;
+    this.lastFrameTime = 0;
   }
 
   async #initialize() {
@@ -39,6 +41,8 @@ export class FaceTracker extends EventTarget {
     if (!this.running) return;
 
     this.running = false;
+    this.lastFrameTime = 0;
+    this.fps = 0;
     if (this.requestRef) {
       cancelAnimationFrame(this.requestRef);
       this.requestRef = null;
@@ -70,6 +74,15 @@ export class FaceTracker extends EventTarget {
     if (!this.running) return;
 
     const startTimeMs = performance.now();
+
+    if (this.lastFrameTime > 0) {
+      const delta = startTimeMs - this.lastFrameTime;
+      const currentFps = 1000 / delta;
+      this.fps = this.fps * 0.9 + currentFps * 0.1;
+    }
+    this.lastFrameTime = startTimeMs;
+    this.dispatchEvent(new CustomEvent("fps", { detail: { fps: this.fps } }));
+
     if (this.video.currentTime !== this.lastVideoTime) {
       this.lastVideoTime = this.video.currentTime;
       const result = this.faceDetector.detectForVideo(this.video, startTimeMs);

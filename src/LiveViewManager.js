@@ -3,6 +3,7 @@ export class LiveViewManager {
     this.container = container;
     this.video = videoElement;
     this.children = [];
+    this.fpsEl = this.container.querySelector(".fps-counter");
   }
 
   show() {
@@ -12,6 +13,7 @@ export class LiveViewManager {
   hide() {
     this.container.classList.add("invisible");
     this.clear();
+    this.fpsEl.textContent = "";
   }
 
   clear() {
@@ -36,5 +38,9 @@ export class LiveViewManager {
 
     this.container.appendChild(keypointEl);
     this.children.push(keypointEl);
+  }
+
+  updateFPS(fps) {
+    this.fpsEl.textContent = `FPS: ${Math.round(fps)}`;
   }
 }

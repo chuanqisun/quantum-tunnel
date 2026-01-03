@@ -36,6 +36,10 @@ faceTracker.addEventListener("updated", (event) => {
   liveViewManager.updateKeypoint(x, y);
 });
 
+faceTracker.addEventListener("fps", (event) => {
+  liveViewManager.updateFPS(event.detail.fps);
+});
+
 startButton.addEventListener("click", () => {
   webcamManager.start().catch((err) => {
     console.error(err);
