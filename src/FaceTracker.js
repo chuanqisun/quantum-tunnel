@@ -1,7 +1,8 @@
 import { FaceDetector, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
+import { Smoother } from "./Smoother.js";
 
 export class FaceTracker extends EventTarget {
-  constructor(videoElement) {
+  constructor(videoElement, smoothFactor = 0.3) {
     super();
     this.video = videoElement;
     this.faceDetector = null;
@@ -13,6 +14,9 @@ export class FaceTracker extends EventTarget {
     this.calibrationData = [];
     this.fps = 0;
     this.lastFrameTime = 0;
+
+    this.smootherX = new Smoother(smoothFactor);
+    this.smootherY = new Smoother(smoothFactor);
   }
 
   async #initialize() {
@@ -43,6 +47,8 @@ export class FaceTracker extends EventTarget {
     this.running = false;
     this.lastFrameTime = 0;
     this.fps = 0;
+    this.smootherX.reset();
+    this.smootherY.reset();
     if (this.requestRef) {
       cancelAnimationFrame(this.requestRef);
       this.requestRef = null;
@@ -104,8 +110,8 @@ export class FaceTracker extends EventTarget {
             this.calibrationData.push({ x: rawX, y: rawY });
           }
 
-          const x = rawX - this.restingPoint.x;
-          const y = rawY - this.restingPoint.y;
+          const x = this.smootherX.next(rawX - this.restingPoint.x);
+          const y = this.smootherY.next(rawY - this.restingPoint.y);
 
           this.dispatchEvent(
             new CustomEvent("updated", {

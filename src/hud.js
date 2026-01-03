@@ -40,7 +40,7 @@ async function initEyeTracking() {
     faceTracker.addEventListener("updated", (event) => {
       if (currentMode === "eye") {
         const { x, y } = event.detail;
-        updateParallax(x, y);
+        updateParallax(-x, -y);
         liveViewManager.updateKeypoint(x, y);
       }
     });
