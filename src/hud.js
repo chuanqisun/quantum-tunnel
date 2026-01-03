@@ -1,5 +1,5 @@
-import GearVisualization from "./GearVisualization.js";
 import { FaceTracker } from "./FaceTracker.js";
+import GearVisualization from "./GearVisualization.js";
 import { LiveViewManager } from "./LiveViewManager.js";
 import { WebcamManager } from "./WebcamManager.js";
 
