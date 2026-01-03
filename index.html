@@ -7,13 +7,12 @@
     <title>Shanshui Parallax</title>
   </head>
   <body>
-    <div id="control-panel">
-      <button id="webcamButton">START</button>
-      <section id="demos" class="invisible">
-        <div id="liveView" class="videoView">
-          <video id="webcam" autoplay playsinline></video>
-        </div>
-      </section>
+    <button id="startButton">START</button>
+    <div id="liveView" class="videoView invisible">
+      <video id="webcam" autoplay playsinline></video>
+      <div id="float-menu">
+        <button id="stopButton">STOP</button>
+      </div>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
