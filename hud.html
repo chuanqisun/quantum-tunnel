@@ -426,7 +426,7 @@
 
           // Center core display
           p.push();
-          p.translate(p.width / 2, p.height / 2);
+          p.translate(p.mouseX, p.mouseY);
 
           // Core rings
           p.noFill();
@@ -455,7 +455,7 @@
           p.fill(255, 200);
           p.textSize(6);
           p.textAlign(p.CENTER, p.CENTER);
-          p.text("CORE", 0, 35);
+          p.text("ENTRY", 0, 35);
 
           p.pop();
 
