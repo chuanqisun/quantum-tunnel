@@ -101,3 +101,5 @@ calibrateButton.addEventListener("click", () => {
   calibrateButton.textContent = "CALIBRATING...";
   faceTracker.calibrate();
 });
+
+FaceTracker.preloadOnIdle();

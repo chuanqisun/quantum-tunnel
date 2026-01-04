@@ -2,6 +2,43 @@ import { FaceDetector, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@med
 import { Smoother } from "./Smoother.js";
 
 export class FaceTracker extends EventTarget {
+  static #detectorPromise = null;
+
+  static preloadOnIdle() {
+    // on supporting browsers, requestIdleCallback. Otherwise, preload after 500ms
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(
+        () => {
+          FaceTracker.preloadLibrary();
+        },
+        {
+          timeout: 1000,
+        }
+      );
+    } else {
+      setTimeout(() => {
+        FaceTracker.preloadLibrary();
+      }, 1000);
+    }
+  }
+
+  static async preloadLibrary() {
+    if (this.#detectorPromise) return this.#detectorPromise;
+
+    this.#detectorPromise = (async () => {
+      const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm");
+      return FaceDetector.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite`,
+          delegate: "GPU",
+        },
+        runningMode: "VIDEO",
+      });
+    })();
+
+    return this.#detectorPromise;
+  }
+
   constructor(videoElement, smoothFactor = 0.3) {
     super();
     this.video = videoElement;
@@ -21,14 +58,7 @@ export class FaceTracker extends EventTarget {
 
   async #initialize() {
     if (this.faceDetector) return;
-    const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm");
-    this.faceDetector = await FaceDetector.createFromOptions(vision, {
-      baseOptions: {
-        modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite`,
-        delegate: "GPU",
-      },
-      runningMode: "VIDEO",
-    });
+    this.faceDetector = await FaceTracker.preloadLibrary();
   }
 
   async start() {
