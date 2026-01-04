@@ -83,12 +83,12 @@ function switchMode(mode) {
   if (mode === "mouse") {
     mouseModeBtn.classList.add("active");
     eyeModeBtn.classList.remove("active");
-    statusText.textContent = "MOVE MOUSE FROM CENTER TO EXPLODE VIEW";
+    statusText.textContent = "MOVE TO EXPLORE";
     stopEyeTracking();
   } else {
     mouseModeBtn.classList.remove("active");
     eyeModeBtn.classList.add("active");
-    statusText.textContent = "TRACKING EYE MOVEMENT...";
+    statusText.textContent = "MOVE HEAD TO EXPLORE";
     initEyeTracking();
   }
 }

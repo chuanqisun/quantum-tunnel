@@ -178,3 +178,45 @@ button:disabled {
   left: 0;
   top: -20px;
 }
+
+#source-link {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 20;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+#source-link a {
+  color: #00f2ff;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: all 0.3s;
+}
+
+#source-link a:hover {
+  opacity: 1;
+  text-shadow: 0 0 8px #00f2ff;
+}
+
+#footer {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10;
+  font-size: 0.7em;
+  letter-spacing: 2px;
+}
+
+#footer a {
+  color: #00f2ff;
+  text-decoration: none;
+  opacity: 0.4;
+  transition: all 0.3s;
+}
+
+#footer a:hover {
+  opacity: 1;
+  text-shadow: 0 0 8px #00f2ff;
+}

@@ -382,8 +382,8 @@ export default class GearVisualization {
     p.fill(0, 255, 200, 150);
     p.textSize(9);
     p.textAlign(p.RIGHT, p.TOP);
-    p.text(`FRAME: ${p.frameCount}`, p.width - 20, 80);
-    p.text(`TIME: ${new Date().toLocaleTimeString()}`, p.width - 20, 95);
+    p.text(`FRAME: ${p.frameCount}`, p.width - 20, 20);
+    p.text(`TIME: ${new Date().toLocaleTimeString()}`, p.width - 20, 35);
     p.pop();
   }
 
