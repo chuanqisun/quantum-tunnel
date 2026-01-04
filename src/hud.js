@@ -21,14 +21,14 @@ function updateParallax(x, y) {
   gearVis.update({ x, y });
 }
 
-const handleMouseMove = (e) => {
+const handlePointerMove = (e) => {
   if (currentMode !== "mouse") return;
   const x = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
   const y = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
   updateParallax(x, y);
 };
 
-window.addEventListener("mousemove", handleMouseMove);
+window.addEventListener("pointermove", handlePointerMove);
 
 async function initEyeTracking() {
   if (!webcamManager) {

@@ -4,6 +4,7 @@ body {
   color-scheme: dark;
   margin: 0;
   overflow: hidden;
+  touch-action: none;
 }
 
 * {
