@@ -4,4 +4,4 @@
 
 Visualizing a quantum tunnel with parallax effect controlled by pointer or head movement.
 
-Implemented with P5.js and MediaPipe.
+Implemented with [p5.js](https://p5js.org/) and [MediaPipe](https://developers.google.com/mediapipe).
