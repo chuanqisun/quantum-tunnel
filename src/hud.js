@@ -29,6 +29,7 @@ const handlePointerMove = (e) => {
   updateParallax(x, y);
 };
 
+window.addEventListener("pointerdown", handlePointerMove);
 window.addEventListener("pointermove", handlePointerMove);
 
 async function initEyeTracking() {
