@@ -5,7 +5,7 @@ export class FaceTracker extends EventTarget {
   static #detectorPromise = null;
 
   static preloadOnIdle() {
-    // on supporting browsers, requestIdleCallback. Otherwise, preload after 500ms
+    // on supporting browsers, requestIdleCallback. Otherwise, preload after short delay
     if ("requestIdleCallback" in window) {
       requestIdleCallback(
         () => {
